@@ -100,7 +100,7 @@ def init_update_loop(window: Window) -> int:
         window.timeout(UPDATE_RATE)
 
         next_key = window.getch()
-        key = next_key if next_key != -1 else key
+        key = next_key if next_key != -1 and next_key in DIRECTIONS else key
         direction = DIRECTIONS[key] if is_not_reverse_direction(direction, key) else direction
 
         move_snake(snake, direction)
