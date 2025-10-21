@@ -6,6 +6,7 @@ from typing import List, Tuple
 Vector2 = Tuple[int, int] 
 Snake = List[Vector2]
 Apple = Vector2
+Bounds = Tuple[int, int]
 Window = curses.window
 
 DIRECTIONS = {
@@ -17,7 +18,7 @@ DIRECTIONS = {
 
 UPDATE_RATE = 500
 
-def create_apple(game_bounds: Tuple[int, int]) -> Apple:
+def create_apple(game_bounds: Bounds) -> Apple:
     height, width = game_bounds
     return [random.randint(1, height - 2), random.randint(1, width - 2)]
 
@@ -58,7 +59,7 @@ def snake_overlaps_apple(snake: Snake, apple: Apple) -> bool:
     head = snake[0]
     return head[0] == apple[0] and head[1] == apple[1]
 
-def snake_is_out_of_bounds(game_bounds: Tuple[int, int], snake: Snake) -> bool:
+def snake_is_out_of_bounds(game_bounds: Bounds, snake: Snake) -> bool:
     head = snake[0]
     y, x = head
     max_y, max_x = game_bounds[0], game_bounds[1]
@@ -67,7 +68,7 @@ def snake_is_out_of_bounds(game_bounds: Tuple[int, int], snake: Snake) -> bool:
 def snake_overlaps_itself(snake: Snake) -> bool:
     return snake[0] in snake[1:]
     
-def game_is_over(game_bounds: Tuple[int, int], snake: Snake) -> bool:
+def game_is_over(game_bounds: Bounds, snake: Snake) -> bool:
     return snake_is_out_of_bounds(game_bounds, snake) or snake_overlaps_itself(snake)
 
 def init_update_loop(window: Window) -> int:
