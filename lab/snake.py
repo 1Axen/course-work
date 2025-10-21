@@ -58,6 +58,18 @@ def snake_overlaps_apple(snake: Snake, apple: Apple) -> bool:
     head = snake[0]
     return head[0] == apple[0] and head[1] == apple[1]
 
+def snake_is_out_of_bounds(game_bounds: Tuple[int, int], snake: Snake) -> bool:
+    head = snake[0]
+    y, x = head
+    max_y, max_x = game_bounds[0], game_bounds[1]
+    return (x < 1 or x > max_x - 2) or (y < 1 or y > max_y - 2)
+
+def snake_overlaps_itself(snake: Snake) -> bool:
+    return snake[0] in snake[1:]
+    
+def game_is_over(game_bounds: Tuple[int, int], snake: Snake) -> bool:
+    return snake_is_out_of_bounds(game_bounds, snake) or snake_overlaps_itself(snake)
+
 def init_update_loop(window: Window) -> int:
     curses.curs_set(0)
     game_bounds = window.getmaxyx()
@@ -88,9 +100,14 @@ def init_update_loop(window: Window) -> int:
         else:
             trim_snake(window, snake)
 
+        if game_is_over(game_bounds, snake):
+            return score
+
         draw_snake(window, snake)
         draw_apple(window, apple)
 
 
 if __name__ == "__main__":
-    curses.wrapper(init_update_loop)
+    score = curses.wrapper(init_update_loop)
+    print("Game Over!")
+    print(f"Your score: {score}")
