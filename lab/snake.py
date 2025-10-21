@@ -23,7 +23,7 @@ REVERSE_DIRECTIONS = {
     curses.KEY_DOWN: "up"
 }
 
-UPDATE_RATE = 500
+UPDATE_RATE = 300
 
 def create_apple(game_bounds: Bounds) -> Apple:
     height, width = game_bounds
