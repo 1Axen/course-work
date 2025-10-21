@@ -16,6 +16,13 @@ DIRECTIONS = {
     curses.KEY_DOWN: "down"
 }
 
+REVERSE_DIRECTIONS = {
+    curses.KEY_LEFT: "right",
+    curses.KEY_RIGHT: "left",
+    curses.KEY_UP: "down",
+    curses.KEY_DOWN: "up"
+}
+
 UPDATE_RATE = 500
 
 def create_apple(game_bounds: Bounds) -> Apple:
@@ -55,6 +62,9 @@ def trim_snake(window: Window, snake: Snake):
     tail = snake.pop()
     window.addch(*tail, " ")
 
+def is_not_reverse_direction(direction: str, key: int) -> bool:
+    return REVERSE_DIRECTIONS[key] != direction
+
 def snake_overlaps_apple(snake: Snake, apple: Apple) -> bool:
     head = snake[0]
     return head[0] == apple[0] and head[1] == apple[1]
@@ -90,9 +100,8 @@ def init_update_loop(window: Window) -> int:
         window.timeout(UPDATE_RATE)
 
         next_key = window.getch()
-        if next_key != -1:
-            key = next_key
-        direction = DIRECTIONS[key] if DIRECTIONS[key] else direction
+        key = next_key if next_key != -1 else key
+        direction = DIRECTIONS[key] if is_not_reverse_direction(direction, key) else direction
 
         move_snake(snake, direction)
         if snake_overlaps_apple(snake, apple):
