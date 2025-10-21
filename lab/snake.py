@@ -54,10 +54,15 @@ def trim_snake(window: Window, snake: Snake):
     tail = snake.pop()
     window.addch(*tail, " ")
 
+def snake_overlaps_apple(snake: Snake, apple: Apple) -> bool:
+    head = snake[0]
+    return head[0] == apple[0] and head[1] == apple[1]
+
 def init_update_loop(window: Window) -> int:
     curses.curs_set(0)
     game_bounds = window.getmaxyx()
     
+    score = 0
     snake = init_snake()
     apple = create_apple(game_bounds)
 
@@ -77,7 +82,11 @@ def init_update_loop(window: Window) -> int:
         direction = DIRECTIONS[key] if DIRECTIONS[key] else direction
 
         move_snake(snake, direction)
-        trim_snake(window, snake)
+        if snake_overlaps_apple(snake, apple):
+            score += 1
+            apple = create_apple(game_bounds)
+        else:
+            trim_snake(window, snake)
 
         draw_snake(window, snake)
         draw_apple(window, apple)
