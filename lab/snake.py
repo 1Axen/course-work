@@ -1,9 +1,11 @@
 import os
 import curses
+import random
 from typing import List, Tuple
 
 Vector2 = Tuple[int, int] 
 Snake = List[Vector2]
+Apple = Vector2
 Window = curses.window
 
 DIRECTIONS = {
@@ -14,6 +16,13 @@ DIRECTIONS = {
 }
 
 UPDATE_RATE = 500
+
+def create_apple(game_bounds: Tuple[int, int]) -> Apple:
+    height, width = game_bounds
+    return [random.randint(1, height - 2), random.randint(1, width - 2)]
+
+def draw_apple(window: Window, apple: Apple):
+    window.addch(*apple, curses.ACS_DIAMOND)
 
 def init_snake() -> Snake:
     snake = [
@@ -47,23 +56,31 @@ def trim_snake(window: Window, snake: Snake):
 
 def init_update_loop(window: Window) -> int:
     curses.curs_set(0)
+    game_bounds = window.getmaxyx()
     
     snake = init_snake()
-    draw_snake(window, snake)
+    apple = create_apple(game_bounds)
 
     key = curses.KEY_RIGHT
     direction = "right"
 
+    draw_snake(window, snake)
+    draw_apple(window, apple)
+
     while True:
         window.border(0)
         window.timeout(UPDATE_RATE)
+
         next_key = window.getch()
         if next_key != -1:
             key = next_key
         direction = DIRECTIONS[key] if DIRECTIONS[key] else direction
+
         move_snake(snake, direction)
         trim_snake(window, snake)
+
         draw_snake(window, snake)
+        draw_apple(window, apple)
 
 
 if __name__ == "__main__":
