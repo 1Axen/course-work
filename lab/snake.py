@@ -1,4 +1,3 @@
-import os
 import curses
 import random
 from typing import List, Tuple
@@ -72,7 +71,7 @@ def snake_overlaps_apple(snake: Snake, apple: Apple) -> bool:
 def snake_is_out_of_bounds(game_bounds: Bounds, snake: Snake) -> bool:
     head = snake[0]
     y, x = head
-    max_y, max_x = game_bounds[0], game_bounds[1]
+    max_y, max_x = game_bounds
     return (x < 1 or x > max_x - 2) or (y < 1 or y > max_y - 2)
 
 def snake_overlaps_itself(snake: Snake) -> bool:
