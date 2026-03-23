@@ -9,13 +9,15 @@ int main() {
         scanf("%d", &arr[i]);
     }
 
-    int reverse[n];
-    for (int i = 0; i < n; i++) {
-        reverse[n - i - 1] = arr[i];  
+    for (int i = 0; i < n / 2; i++) {
+        int temp = arr[i];
+        int reverse_index = (n - i - 1);
+        arr[i] = arr[reverse_index];
+        arr[reverse_index] = temp;  
     }
 
     for (int i = 0; i < n; i++) {
-        printf("%d ", reverse[i]);
+        printf("%d ", arr[i]);
     }
 
     return 0;
