@@ -20,10 +20,20 @@ typedef struct {
     u64 course_ids[10];
 } Student;
 
-u32 to_timestamp(char* date) {
+u32 to_timestamp(int day, int month, int year) {
+    return (year << 9) | (month << 5) | day;
+}
+
+u32 mdy_to_timestamp(char* date) {
     int day, month, year;
     sscanf(date, "%d.%d.%d", &month, &day, &year);
-    return (year << 9) | (month << 5) | day;
+    return to_timestamp(day, month, year);
+}
+
+u32 dmy_to_timestamp(char* date) {
+    int day, month, year;
+    sscanf(date, "%d.%d.%d", &day, &month, &year);
+    return to_timestamp(day, month, year);
 }
 
 int write_courses_file(Course* array, int size, char* teacher, char* period_start, char* period_end) {
@@ -33,8 +43,8 @@ int write_courses_file(Course* array, int size, char* teacher, char* period_star
         return -1;
     }
 
-    u32 start_timestamp = to_timestamp(period_start);
-    u32 end_timestamp = to_timestamp(period_end);
+    u32 start_timestamp = dmy_to_timestamp(period_start);
+    u32 end_timestamp = dmy_to_timestamp(period_end);
 
     int count = 0;
     for (int i = 0; i < size; i++) {
@@ -43,7 +53,7 @@ int write_courses_file(Course* array, int size, char* teacher, char* period_star
             continue;
         }
 
-        u32 timestamp = to_timestamp(c->start_date);
+        u32 timestamp = mdy_to_timestamp(c->start_date);
         if (timestamp < start_timestamp || timestamp > end_timestamp) {
             continue;
         }
@@ -120,10 +130,10 @@ int enroll_student(Course* courses, int courses_size, Student* students, int stu
 
 void remove_courses_before_date(Course** array, int* size, char* date) {
     int counter = 0;
-    u32 timestamp = to_timestamp(date);
+    u32 timestamp = dmy_to_timestamp(date);
 
     for (int i = 0; i < *size; i++) {
-        if (to_timestamp((*array)[i].start_date) < timestamp) {
+        if (mdy_to_timestamp((*array)[i].start_date) < timestamp) {
             continue;
         }
 
