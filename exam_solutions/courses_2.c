@@ -179,6 +179,11 @@ Course* find_open_courses_below_average_price(Course* array, int size, int* size
     }
 
     *size_out = counter;
+    if (counter == 0) {
+        free(result);
+        return NULL;
+    }
+
     return realloc(result, counter * sizeof(Course));
 }
 

@@ -146,6 +146,12 @@ void remove_courses_before_date(Course** array, int* size, char* date) {
     }
 
     *size = counter;
+    if (counter == 0) {
+        free(*array);
+        *array = NULL;
+        return;
+    }
+
     *array = realloc(*array, counter * sizeof(Course));
 }
 
