@@ -159,7 +159,7 @@ int enroll_student(Course* courses, int courses_size, Student* students, int stu
 }
 
 Course* find_open_courses_below_average_price(Course* array, int size, int* size_out) {
-    if (size == 0) {
+    if (size <= 1) {
         return NULL;
     }
     
